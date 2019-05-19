@@ -3,6 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup as bs
+import time
 import re
 from Model import Message
 
@@ -22,7 +23,7 @@ class WhatsAppWriter(object):
         prev = ""
         for s in soupp:
             if (prev != ""):
-                if (pattern2.match(s)):
+                if (pattern2.match(s) or s == 'אתמול'):
                     if (pattern1.search(prev)):
                         prev = prev[1:-1]
                     if (prev not in clients):
@@ -49,11 +50,14 @@ class WhatsAppWriter(object):
         # Load a page
         self.driver.get("https://web.whatsapp.com/")
         # Make the tests...
+        # self.read_contact()
 
         self.driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w')
 
+        time.sleep(6)
+        self.read_contact()
+        return self.clients
 
-        return self.read_contact()
 
     def write(self, msg, name):
         user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % name)

@@ -17,7 +17,7 @@ class Controller:
         self.last_digest = time.time()
         self.digest_timer = threading.Timer(self.digest_interval, self.interval_function)
         self.user_interaction_parser = UserDialogLogic.UserDialogLogic()
-        self.whats_app_writer = WhatsAppWriter.WhatsAppWriter(r"../Model/chromedriver.exe")
+        self.whats_app_writer = WhatsAppWriter.WhatsAppWriter(r"../Model/chromedriver")
         self.whats_app_reader = self.whats_app_writer
         self.message_event_pusher = MessageEvent.MessageEvent(self.whats_app_reader)
         self.message_event_pusher.add_listener(self.on_message_received)
@@ -35,7 +35,7 @@ class Controller:
         parsed_messaged = []
         for message in messages:
             if message.sender == message.chat_name:
-                self.user_interaction_parser.handle(message, self.whats_app_writer)
+                self.user_interaction_parser.handle(message)
             elif not self.whats_app_model.user_exists(message.sender):
                 self.whats_app_model.add_user(message.sender)
             parsed_messaged.append(Message.Message(self.whats_app_model.get_user(message.sender), message.content,
@@ -45,7 +45,7 @@ class Controller:
         messages_to_bot = [message for message in parsed_messaged if message.sender == message.chat_name]
         #print(message_to_filter)
         for message in messages_to_bot:
-            self.user_interaction_parser.handle(message, self)
+            self.user_interaction_parser.handle(message)
 
         filtered_message = self.message_filterer.filter(message_to_filter)
         for x in parsed_messaged:
