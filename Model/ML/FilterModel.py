@@ -54,7 +54,7 @@ class FilterModel:
         imp = ",.?:!"
         for item in imp:
             message = message.replace(item, " " + item + " ")
-        notimp = '/\\;+-()[]"*&^%$#@'
+        notimp = '/\\;+-()[]{}"*&^%$#@'
         for item in notimp:
             message = message.replace(item, " ")
         list_message = message.split()
@@ -63,10 +63,11 @@ class FilterModel:
         for word in list_message:
             for key in keys:
                 if diff(word, key):
-                    if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר"):
+                    if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר") or diff(word, "דחיה") or diff(word, "הארכה"):
                         counter += 2
-                        continue
+                        break
                     counter += 1
+                    break
         ratio = counter / len(list_message)
         if len(list_message) < 5:
             if len(list_message) < 2:
@@ -98,7 +99,7 @@ class FilterModel:
         if len(message) < 2 or len(message.split()) < 2:
             return False
         if len(re.findall("\d\.\d", message)) > 0 or \
-                len(re.findall("\d/\d", message)) > 0:
+                len(re.findall("\d/\d", message)) or len(re.findall("\d", message)) > 0:
             return True
         four_or_more = (char for char, group in groupby(message)
                          if sum(1 for _ in group) >= 4)
@@ -119,5 +120,6 @@ class FilterModel:
         for l in lines:
             val = self.check_by_keys(l, keys) or self.check_by_rules(l)
             print(val, "   :", l)
+
 
 
