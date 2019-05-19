@@ -49,7 +49,7 @@ class Controller:
             self.user_interaction_parser.handle(message, self.whats_app_writer)
 
         filtered_message = self.message_filterer.filter(message_to_filter)
-        with open("data1.csv",'w',encoding='utf-8') as f:
+        with open("post_fix/data1.csv",'w',encoding='utf-8') as f:
             for x in filtered_message:
                 f.write(x.content + ',1\n')
             for x in message_to_filter:
