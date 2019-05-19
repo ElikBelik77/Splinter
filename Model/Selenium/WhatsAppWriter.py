@@ -30,7 +30,17 @@ class WhatsAppWriter(object):
                         clients.append(prev)
 
             prev = s
-        self.clients = clients
+
+        dict = {}
+        dict['users'] = []
+        dict['groups'] = []
+        for c in clients:
+            if (pattern1.match(c)):
+                dict['users'].append(c)
+            else:
+                dict['groups'].append(c)
+
+        self.clients = dict
 
 
     def open_WhatsApp(self):
