@@ -52,7 +52,7 @@ class FilterModel:
         for item in notimp:
             message = message.replace(item, " ")
         list_message = message.split()
-        spam = false
+        spam = False
         counter = 0
         for word in list_message:
             for key in keys:
@@ -65,19 +65,19 @@ class FilterModel:
         ratio = counter / len(message)
         if len(message) < 5:
             if ratio < 0.5:
-                spam = true
+                spam = True
         elif len(message) < 20:
             if ratio < 0.4:
-                spam = true
+                spam = True
         elif len(message) < 30:
             if ratio < 0.3:
-                spam = true
+                spam = True
         elif len(message) < 40:
             if ratio < 0.2:
-                spam = true
+                spam = True
         else:
             if ratio < 0.1:
-                spam = true
+                spam = True
         return not spam
 
     def check_by_rules(self, massage):
