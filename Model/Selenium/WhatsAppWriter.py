@@ -7,11 +7,12 @@ import re
 from Model import Message
 
 class WhatsAppWriter(object):
-    def __init__(self, group_name):
+    def __init__(self,driver_path, group_name):
         self.group_name = group_name
+        self.driver_path = driver_path
 
     def open_WhatsApp(self):
-        self.driver = webdriver.Chrome(executable_path=r"../chromedriver")
+        self.driver = webdriver.Chrome(executable_path=self.driver_path)
         self.driver.get("https://web.whatsapp.com/")
         input("click after connected")
 

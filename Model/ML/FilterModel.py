@@ -10,7 +10,7 @@ def diff(f, s):
 
 
 class FilterModel:
-    def __init__(self, keys_file_name="good_words_list"):
+    def __init__(self, keys_file_name="good_words_list.txt"):
         # File name of default key words
         self.keys = keys_file_name
 
@@ -91,6 +91,7 @@ class FilterModel:
         :param message:
         :return:
         """
+        message = message.content
         if len(message) < 2 or len(message.split()) < 2:
             return False
         if len(re.findall("\d\.\d", message)) > 0 or \
