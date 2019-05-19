@@ -10,10 +10,50 @@ class WhatsAppWriter(object):
     def __init__(self,driver_path):
         self.driver_path = driver_path
 
+    def read_contact(self):
+        url = self.driver.page_source
+        soup = bs(url, "lxml")
+
+        soupp = list(soup.strings)
+        pattern1 = re.compile("[+]\d\d\d \d\d-\d\d\d-\d\d\d\d")
+        pattern2 = re.compile("\d\d:\d\d")
+
+        clients = []
+        prev = ""
+        for s in soupp:
+            if (prev != ""):
+                if (pattern2.match(s)):
+                    if (pattern1.search(prev)):
+                        prev = prev[1:-1]
+                    if (prev not in clients):
+                        clients.append(prev)
+
+            prev = s
+        self.clients = clients
+
+
     def open_WhatsApp(self):
         self.driver = webdriver.Chrome(executable_path=self.driver_path)
         self.driver.get("https://web.whatsapp.com/")
         input("click after connected")
+
+
+    def get_contact(self):
+
+        self.driver.get("http://www.google.com/")
+
+        # open tab
+        self.driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 't')
+        # You can use (Keys.CONTROL + 't') on other OSs
+
+        # Load a page
+        self.driver.get("https://web.whatsapp.com/")
+        # Make the tests...
+
+        # close the tab
+        # (Keys.CONTROL + 'w') on other OSs.
+        self.driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w')
+        return self.read_contact()
 
     def write(self, msg, name):
         user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % name)
@@ -88,6 +128,8 @@ class WhatsAppWriter(object):
 if __name__ == "__main__":
     bot = WhatsAppWriter(r"../chromedriver")
     bot.open_WhatsApp()
+    # print(bot.clients)
+    bot.get_contact()
     # bot.write("hi")
-    l = bot.read("15:55", "hack")
-    print(l)
+    #l = bot.read("15:55", "hack")
+    #print(l)
