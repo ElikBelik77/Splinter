@@ -123,8 +123,7 @@ class FilterModel:
         """
         if len(message) < 2 or len(message.split()) < 2:
             return False
-        if len(re.findall("\d\.\d", message)) > 0 or \
-                len(re.findall("\d/\d", message)) or len(re.findall("\d", message)) > 0:
+        if len(re.findall("\d\.\d", message)) > 0 or len(re.findall("\d/\d", message)):
             return True
         four_or_more = (char for char, group in groupby(message)
                          if sum(1 for _ in group) >= 4)
@@ -137,18 +136,18 @@ class FilterModel:
             return True
         return False
 
-    # def testing(self):
-    #     f = codecs.open("test_messages", encoding='utf-8', mode='r')
-    #     lines = f.readlines()
-    #     h = codecs.open("good_words_list", encoding='utf-8', mode='r')
-    #     keys = h.readlines()
-    #     for l in lines:
-    #         val = self.check_by_keys(l, keys) or self.check_by_rules(l)
-    #         print(val, "   :", l)
+    def testing(self):
+        f = codecs.open("test_messages", encoding='utf-8', mode='r')
+        lines = f.readlines()
+        h = codecs.open("good_words_list", encoding='utf-8', mode='r')
+        keys = h.readlines()
+        for l in lines:
+            val = self.check_by_keys(l, keys) or self.check_by_rules(l)
+            print(val, "   :", l)
 
 
 
 
-# t = FilterModel()
-#
-# t.testing()
+t = FilterModel()
+
+t.testing()
