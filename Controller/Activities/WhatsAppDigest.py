@@ -4,5 +4,7 @@ class WhatsAppDigest():
         pass
 
     def execute(self, controller):
-        controller.
-        pass
+        message_digest = controller.whats_app_model.whats_app_storage.get_messages()
+        controller.whats_app_model.whats_app_storage.clear_messages()
+        for message in message_digest:
+            controller.whats_app_writer.write(message)
