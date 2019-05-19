@@ -24,12 +24,12 @@ class MessageEvent(object):
 
     def get_message(self):
         while True:
-            message = self.reader.read("00:00", "ראשי קבוצה HackAU")
+            message = self.reader.read(datetime.now().strftime("%H:%M"), "hack")
             length = len(message)
             if length > 0:
                 self.notify(message)
             else:
-                print("empty")
+                pass
             time.sleep(2)
 
     def start(self):

@@ -26,7 +26,7 @@ class FilterModel:
         with open(self.keys, encoding='utf-8') as file:
             keys = file.readlines()
             for i, msg in enumerate(messages):
-                if self.check_by_keys(msg.content, keys) and self.check_by_rules(msg):
+                if self.check_by_keys(msg.content, keys) or self.check_by_rules(msg):
                     important_list.append(messages[i])
         return important_list
 
@@ -85,7 +85,7 @@ class FilterModel:
         else:
             if ratio < 0.1:
                 spam = True
-        print(ratio)
+        # print(ratio)
         return not spam
 
     def check_by_rules(self, message):
