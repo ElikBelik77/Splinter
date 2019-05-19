@@ -1,5 +1,5 @@
 import threading
-
+import time
 
 
 class MessageEvent:
@@ -7,9 +7,10 @@ class MessageEvent:
     def __init__(self, whatsapp_reader) -> None:
         self.reader = whatsapp_reader
         self.listeners = []
-        self.time_in_seconds = 10
+        self.time_in_seconds = 2
         self.timer_func = self.get_message
         self.timer = None
+        self.stop = False
         super().__init__()
 
     def add_listener(self, listener):
@@ -20,16 +21,22 @@ class MessageEvent:
             l(messages)
 
     def get_message(self):
-        message = self.reader.send_message
-        length = len(message)
-        if length > 0:
-            self.notify(message)
+        while True:
+            message = self.reader.send_message()
+            length = len(message)
+            if length > 0:
+                self.notify(message)
+            else:
+                print("empty")
+            time.sleep(2)
 
     def listening(self):
         self.timer = threading.Timer(self.time_in_seconds, self.timer_func).start()
+        # if not self.stop:
+        #     self.listening()
 
     def stop(self):
-        self.timer.stop()
+        self.stop = True
 
     def change_timing(self, time):
         self.time_in_seconds = time
