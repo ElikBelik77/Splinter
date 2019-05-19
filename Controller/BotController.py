@@ -8,6 +8,7 @@ from Model import MessageEvent
 from Model.ML import FilterModel
 from Controller.Activities import WhatsAppDigest
 
+
 class Controller:
     def __init__(self, digest_interval, activities):
         self.stop = False
@@ -16,7 +17,7 @@ class Controller:
         self.last_digest = time.time()
         self.digest_timer = threading.Timer(self.digest_interval, self.interval_function)
         self.user_interaction_parser = UserDialogLogic.UserDialogLogic()
-        self.whats_app_writer = WhatsAppWriter.WhatsAppWriter(r"../Model/chromedriver")
+        self.whats_app_writer = WhatsAppWriter.WhatsAppWriter(r"../Model/chromedriver.exe")
         self.whats_app_reader = self.whats_app_writer
         self.message_event_pusher = MessageEvent.MessageEvent(self.whats_app_reader)
         self.message_event_pusher.add_listener(self.on_message_received)
@@ -36,18 +37,24 @@ class Controller:
             elif not self.whats_app_model.user_exists(message.sender):
                 self.whats_app_model.add_user(message.sender)
             parsed_messaged.append(Message.Message(self.whats_app_model.get_user(message.sender), message.content,
-                                              message.time, message.chat_name, None))
+                                                   message.time, message.chat_name, None))
 
         message_to_filter = [message for message in parsed_messaged if message.sender is not message.chat_name]
         messages_to_bot = [message for message in parsed_messaged if message.sender == message.chat_name]
         for x in message_to_filter:
-            print(x.sender,'says',x.content)
+            print(x.sender, 'says', x.content)
         print(message_to_filter)
         print(messages_to_bot)
         for message in messages_to_bot:
             self.user_interaction_parser.handle(message, self.whats_app_writer)
 
         filtered_message = self.message_filterer.filter(message_to_filter)
+        with open("post_fix/data1.csv",'w',encoding='utf-8') as f:
+            for x in filtered_message:
+                f.write(x.content + ',1\n')
+            for x in message_to_filter:
+                if x not in filtered_message:
+                    f.write(x.content + ',0\n')
         self.whats_app_model.whats_app_storage.push_messages(filtered_message)
 
     def stop(self):
