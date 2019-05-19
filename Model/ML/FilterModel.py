@@ -44,10 +44,10 @@ class FilterModel:
         imp = ",.?:!"
         for item in imp:
             message = message.replace(item, " " + item + " ")
-        notimp = "/\\;+-()*&^%$#@"
+        notimp = '/\\;+-()[]"*&^%$#@'
         for item in notimp:
             message = message.replace(item, " ")
-        list_message =  message.split()
+        list_message = message.split()
         spam = false
         counter = 0
         for word in list_message:
@@ -65,10 +65,16 @@ class FilterModel:
         elif len(message) < 20:
             if ratio < 0.4:
                 spam = true
-        elif len(message) < 20:
-            if ratio < 0.4:
+        elif len(message) < 30:
+            if ratio < 0.3:
                 spam = true
-
+        elif len(message) < 40:
+            if ratio < 0.2:
+                spam = true
+        else:
+            if ratio < 0.1:
+                spam = true
+        return not spam
 
     def check_by_rules(self, massage):
         """
