@@ -63,15 +63,15 @@ class FilterModel:
         for word in list_message:
             for key in keys:
                 if diff(word, key):
-                    print(word)
-                    if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר") or diff(word, "דחיה") or diff(word, "הארכה"):
+                    if (word == "עזרה") or (word == "בבקשה") or diff(word, "?") or diff(word, "אפשר")\
+                            or (word == "דחיה") or (word == "דחhיה") or (word == "הארכה"):
                         counter += 2
                         break
                     counter += 1
                     break
         ratio = counter / len(list_message)
         if len(list_message) < 5:
-            if len(list_message) < 2:
+            if len(list_message) <= 3:
                 spam = True
             elif ratio < 0.45:
                 spam = True
@@ -97,7 +97,8 @@ class FilterModel:
         """
         if len(message) < 3 or len(message.split()) < 3:
             return False
-        if len(re.findall("\d\.\d", message)) > 0 or len(re.findall("\d/\d", message)):
+        if len(re.findall("\d\.\d", message)) > 0: #or len(re.findall("\d/\d", message)) > 0
+            print("print hi1")
             return True
         four_or_more = (char for char, group in groupby(message)
                          if sum(1 for _ in group) >= 4)
