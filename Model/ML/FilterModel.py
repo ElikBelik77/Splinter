@@ -67,19 +67,19 @@ class FilterModel:
                         counter += 2
                         continue
                     counter += 1
-        ratio = counter / len(message)
-        if len(message) < 5:
-            if len(message) < 2:
+        ratio = counter / len(list_message)
+        if len(list_message) < 5:
+            if len(list_message) < 2:
                 spam = True
             elif ratio < 0.45:
                 spam = True
-        elif len(message) < 20:
+        elif len(list_message) < 20:
             if ratio < 0.35:
                 spam = True
-        elif len(message) < 30:
+        elif len(list_message) < 30:
             if ratio < 0.25:
                 spam = True
-        elif len(message) < 40:
+        elif len(list_message) < 40:
             if ratio < 0.15:
                 spam = True
         else:
