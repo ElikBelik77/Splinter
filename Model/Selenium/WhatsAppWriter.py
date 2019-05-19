@@ -4,16 +4,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup as bs
 import re
+from Model import Message
 
 class WhatsAppWriter(object):
     def __init__(self, group_name):
         self.group_name = group_name
+
     def open_WhatsApp(self):
         self.driver = webdriver.Chrome(executable_path=r"../chromedriver")
         self.driver.get("https://web.whatsapp.com/")
         input("click after connected")
+
     def write(self, msg):
-        user = self.driver.find_element_by_xpath('//span[@title = "%s"]'%self.group_name)
+        user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % self.group_name)
         user.click()
         inp_xpath = "//div[@contenteditable='true']"
         input_box = self.driver.find_element_by_xpath(inp_xpath)
@@ -32,29 +35,13 @@ class WhatsAppWriter(object):
         if (int(one_l[1]) > int(two_l[1])):
             return 1
         return 2
+
     def read(self, since):
         user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % self.group_name)
         user.click()
         url = self.driver.page_source
         soup = bs(url, "lxml")
-        i = 0
-        permission = 0
-        msg = []
-        # for s in soup.strings:
-        #     if (s == self.group_name):
-        #         i+=1
-        #     if (i == 3):
-        #         pattern = re.compile("\d\d:\d\d")
-        #         if(pattern.match(s)):
-        #             if (self.compareTimes(s, since) == 0 or self.compareTimes(s, since) == 1):
-        #                 permission = 1
-        #     if (permission):
-        #         if(pattern.match(s)):
-        #             msg.append([prev, s])
-        #     if (i == 2):
-        #         i+=1
-        #     print(s)
-        #     prev = s
+
         soupp = list(soup.strings)
         pattern1 = re.compile("\d\d:\d\d")
         pattern2 = re.compile("[+]\d\d\d \d\d-\d\d\d-\d\d\d\d")
@@ -81,24 +68,27 @@ class WhatsAppWriter(object):
 
                 user = []
 
-
-        return msg
-
-
-
-
+        non_empty_messages = [x for x in msg if len(x)!=0]
+        for x in non_empty_messages:
+            x.reverse()
+        return self.format_messages(non_empty_messages, self.group_name)
 
 
-
-
-
-
+    def format_messages(self, messages, group_name):
+        formatted_messages = []
+        for i in range(0,len(messages)):
+            j = 1
+            while j < len(messages[i]):
+                if i == 0 and j >= len(messages[i]) - 2:
+                    break
+                formatted_messages.append(Message.Message(messages[i][0],messages[i][j],messages[i][j+1],group_name,None))
+                j += 2
+        return formatted_messages
 
 
 if __name__ == "__main__":
     bot = WhatsAppWriter("hack")
     bot.open_WhatsApp()
-    #bot.write("hi")
+    # bot.write("hi")
     l = bot.read("15:55")
     print(l)
-
