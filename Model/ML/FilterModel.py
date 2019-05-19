@@ -3,11 +3,38 @@
 import codecs
 import re
 from itertools import groupby
-from difflib import get_close_matches
 
 
 def diff(f, s):
-    return len(get_close_matches(f, [s])) > 0
+    return editDistance(f,s,len(f),len(s)) < 3
+
+# A Naive recursive Python program to fin minimum number
+# operations to convert str1 to str2
+def editDistance(str1, str2, m, n):
+    # If first string is empty, the only option is to
+    # insert all characters of second string into first
+    if m == 0:
+        return n
+
+        # If second string is empty, the only option is to
+    # remove all characters of first string
+    if n == 0:
+        return m
+
+        # If last characters of two strings are same, nothing
+    # much to do. Ignore last characters and get count for
+    # remaining strings.
+    if str1[m - 1] == str2[n - 1]:
+        return editDistance(str1, str2, m - 1, n - 1)
+
+        # If last characters are not same, consider all three
+    # operations on last character of first string, recursively
+    # compute minimum cost for all three operations and take
+    # minimum of three values.
+    return 1 + min(editDistance(str1, str2, m, n - 1),  # Insert
+                   editDistance(str1, str2, m - 1, n),  # Remove
+                   editDistance(str1, str2, m - 1, n - 1)  # Replace
+                   )
 
 
 class FilterModel:
@@ -23,10 +50,10 @@ class FilterModel:
         :return: Filtered list of messages
         """
         important_list = []
-        with open(self.keys, encoding='utf-8') as file:
+        with open(self.keys) as file:
             keys = file.readlines()
             for i, msg in enumerate(messages):
-                if self.check_by_keys(msg.content, keys) or self.check_by_rules(msg):
+                if self.check_by_keys(msg.content, keys) and self.check_by_rules(msg):
                     important_list.append(messages[i])
         return important_list
 
@@ -86,7 +113,6 @@ class FilterModel:
         else:
             if ratio < 0.1:
                 spam = True
-        # print(ratio)
         return not spam
 
     def check_by_rules(self, message):
@@ -95,7 +121,6 @@ class FilterModel:
         :param message:
         :return:
         """
-        message = message.content
         if len(message) < 2 or len(message.split()) < 2:
             return False
         if len(re.findall("\d\.\d", message)) > 0 or \
@@ -112,13 +137,18 @@ class FilterModel:
             return True
         return False
 
-    def testing(self):
-        f = codecs.open("test_messages", encoding='utf-8', mode='r')
-        lines = f.readlines()
-        h = codecs.open("good_words_list", encoding='utf-8', mode='r')
-        keys = h.readlines()
-        for l in lines:
-            val = self.check_by_keys(l, keys) or self.check_by_rules(l)
-            print(val, "   :", l)
+    # def testing(self):
+    #     f = codecs.open("test_messages", encoding='utf-8', mode='r')
+    #     lines = f.readlines()
+    #     h = codecs.open("good_words_list", encoding='utf-8', mode='r')
+    #     keys = h.readlines()
+    #     for l in lines:
+    #         val = self.check_by_keys(l, keys) or self.check_by_rules(l)
+    #         print(val, "   :", l)
 
 
+
+
+# t = FilterModel()
+#
+# t.testing()
