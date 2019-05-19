@@ -119,8 +119,6 @@ class WhatsAppWriter(object):
         for i in range(0,len(messages)):
             j = 1
             while j < len(messages[i]):
-                if i == 0 and j >= len(messages[i]) - 2:
-                    break
                 formatted_messages.append(Message.Message(messages[i][0],messages[i][j],messages[i][j+1],group_name,None))
                 j += 2
         return formatted_messages
