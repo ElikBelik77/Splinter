@@ -137,6 +137,7 @@ class WhatsAppWriter(object):
         return formatted_messages
 
 
+
 if __name__ == "__main__":
     bot = WhatsAppWriter(r"../chromedriver")
     bot.open_WhatsApp()
