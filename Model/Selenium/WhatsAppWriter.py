@@ -67,7 +67,6 @@ class WhatsAppWriter(object):
                 msg.append(user)
 
                 user = []
-
         non_empty_messages = [x for x in msg if len(x)!=0]
         for x in non_empty_messages:
             x.reverse()
@@ -87,7 +86,7 @@ class WhatsAppWriter(object):
 
 
 if __name__ == "__main__":
-    bot = WhatsAppWriter(r"../Model/chromedriver")
+    bot = WhatsAppWriter(r"../chromedriver")
     bot.open_WhatsApp()
     # bot.write("hi")
     l = bot.read("15:55", "hack")
