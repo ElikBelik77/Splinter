@@ -2,10 +2,15 @@ from .. import Message
 from .. import User
 import re
 from itertools import groupby
+from difflib import get_close_matches
+
+
+def diff(f, s):
+    return len(get_close_matches(f, [s])) > 0
 
 
 class FilterModel:
-    def __init__(self, keys_file_name):
+    def __init__(self, keys_file_name="good_words_list"):
         # File name of default key words
         self.keys = keys_file_name
 
@@ -56,37 +61,29 @@ class FilterModel:
         counter = 0
         for word in list_message:
             for key in keys:
-                if word == key:
-                    if word == "עזרה" or word == "בבקשה" or word == "?" or word == "אפשר":
+                if diff(word, key):
+                    if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר"):
                         counter += 2
                         break
                     counter += counter
                     break
         ratio = counter / len(message)
         if len(message) < 5:
-            if ratio < 0.5:
+            if ratio < 0.45:
                 spam = True
         elif len(message) < 20:
-            if ratio < 0.4:
+            if ratio < 0.35:
                 spam = True
         elif len(message) < 30:
-            if ratio < 0.3:
+            if ratio < 0.25:
                 spam = True
         elif len(message) < 40:
-            if ratio < 0.2:
+            if ratio < 0.15:
                 spam = True
         else:
             if ratio < 0.1:
                 spam = True
         return not spam
-
-    def check_by_rules(self, massage):
-        """
-        Check a single massage by rules
-        :param massage:
-        :return:
-        """
-        pass
 
     def check_by_rules(self, message):
         """
@@ -96,7 +93,9 @@ class FilterModel:
         """
         if len(message) < 2 or len(message.split()) < 2:
             return False
-
+        if len(re.findall("\d\.\d", message)) > 0 or \
+                len(re.findall("\d/\d", message)) > 0:
+            return True
         four_or_more = (char for char, group in groupby(message)
                          if sum(1 for _ in group) >= 4)
         if any(four_or_more):
@@ -106,6 +105,6 @@ class FilterModel:
                 return False
         if len(re.findall(",", message)) > 3:
             return True
-        return True
+        return False
 
 
