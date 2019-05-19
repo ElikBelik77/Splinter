@@ -1,6 +1,8 @@
 from .. import Message
 from .. import User
 import re
+from itertools import groupby
+
 
 class FilterModel:
     def __init__(self, keys_file_name):
@@ -52,6 +54,11 @@ class FilterModel:
         :return:
         """
         if len(message) < 2 or len(message.split()) < 2:
+            return False
+
+        four_or_more = (char for char, group in groupby(message)
+                         if sum(1 for _ in group) >= 4)
+        if any(four_or_more):
             return False
         for item in re.findall(".:.", message):
             if item[0] in "&()–[{}]:;',?/*^><" or item[-1] in "&()–[{}]:;',?/*^><":
