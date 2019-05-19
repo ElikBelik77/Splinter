@@ -54,7 +54,7 @@ class FilterModel:
         imp = ",.?:!"
         for item in imp:
             message = message.replace(item, " " + item + " ")
-        notimp = '/\\;+-()[]"*&^%$#@'
+        notimp = '/\\;+-()[]{}"*&^%$#@'
         for item in notimp:
             message = message.replace(item, " ")
         list_message = message.split()
@@ -63,6 +63,7 @@ class FilterModel:
         for word in list_message:
             for key in keys:
                 if diff(word, key):
+                    print(word)
                     if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר"):
                         counter += 2
                         continue
@@ -85,6 +86,7 @@ class FilterModel:
         else:
             if ratio < 0.1:
                 spam = True
+        print(counter, " ", len(list_message))
         print(ratio)
         return not spam
 
