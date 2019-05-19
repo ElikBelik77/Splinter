@@ -62,6 +62,7 @@ class FilterModel:
         for word in list_message:
             for key in keys:
                 if diff(word, key):
+                    print(word)
                     if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר") or diff(word, "דחיה") or diff(word, "הארכה"):
                         counter += 2
                         break
