@@ -22,10 +22,11 @@ class FilterModel:
         :return: Filtered list of messages
         """
         important_list = []
-        with open(self.keys) as file:
+        with open(self.keys, encoding='utf-8') as file:
             keys = file.readlines()
             for i, msg in enumerate(messages):
                 if self.check_by_keys(msg.content, keys) or self.check_by_rules(msg):
+                    print(self.check_by_keys(msg.content, keys), self.check_by_rules(msg))
                     important_list.append(messages[i])
         return important_list
 
