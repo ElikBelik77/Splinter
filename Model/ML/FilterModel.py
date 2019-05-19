@@ -2,10 +2,15 @@ from .. import Message
 from .. import User
 import re
 from itertools import groupby
+from difflib import get_close_matches
+
+
+def diff(f, s):
+    return len(get_close_matches(f, [s])) > 0
 
 
 class FilterModel:
-    def __init__(self, keys_file_name):
+    def __init__(self, keys_file_name="good_words_list"):
         # File name of default key words
         self.keys = keys_file_name
 
@@ -56,8 +61,8 @@ class FilterModel:
         counter = 0
         for word in list_message:
             for key in keys:
-                if word == key:
-                    if word == "עזרה" or word == "בבקשה" or word == "?" or word == "אפשר":
+                if diff(word, key):
+                    if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר"):
                         counter += 2
                         break
                     counter += counter
@@ -80,14 +85,6 @@ class FilterModel:
                 spam = True
         return not spam
 
-    def check_by_rules(self, massage):
-        """
-        Check a single massage by rules
-        :param massage:
-        :return:
-        """
-        pass
-
     def check_by_rules(self, message):
         """
         Check a single message by rules
@@ -96,7 +93,9 @@ class FilterModel:
         """
         if len(message) < 2 or len(message.split()) < 2:
             return False
-
+        if len(re.findall("\d\.\d", message)) > 0 or \
+                len(re.findall("\d/\d", message)) > 0:
+            return True
         four_or_more = (char for char, group in groupby(message)
                          if sum(1 for _ in group) >= 4)
         if any(four_or_more):
@@ -106,6 +105,6 @@ class FilterModel:
                 return False
         if len(re.findall(",", message)) > 3:
             return True
-        return True
+        return False
 
 
