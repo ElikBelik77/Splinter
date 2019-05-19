@@ -6,7 +6,7 @@ from itertools import groupby
 
 
 def diff(f, s):
-    return sum(c1 == c2 for c1, c2 in zip(f.ljust(max(len(f), len(s))), s.ljust(max(len(f), len(s)))))
+    return sum(c1 == c2 for c1, c2 in zip(f.ljust(max(len(f), len(s))), s.ljust(max(len(f), len(s))))) < 1
 
 
 class FilterModel:
