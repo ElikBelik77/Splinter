@@ -7,16 +7,17 @@ import re
 from Model import Message
 
 class WhatsAppWriter(object):
-    def __init__(self, group_name):
-        self.group_name = group_name
+    def __init__(self,driver_path):
+        self.driver_path = driver_path
 
     def open_WhatsApp(self):
-        self.driver = webdriver.Chrome(executable_path=r"../chromedriver")
+        self.driver = webdriver.Chrome(executable_path=self.driver_path)
         self.driver.get("https://web.whatsapp.com/")
+        self.driver.add_cookie({'name': 'wa_ul', 'value': '351a3843-72fa-1a71-5f08-dc35c6f010ca'})
         input("click after connected")
 
-    def write(self, msg):
-        user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % self.group_name)
+    def write(self, msg, name):
+        user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % name)
         user.click()
         inp_xpath = "//div[@contenteditable='true']"
         input_box = self.driver.find_element_by_xpath(inp_xpath)
@@ -36,8 +37,8 @@ class WhatsAppWriter(object):
             return 1
         return 2
 
-    def read(self, since):
-        user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % self.group_name)
+    def read(self, since, name):
+        user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % name)
         user.click()
         url = self.driver.page_source
         soup = bs(url, "lxml")
@@ -49,7 +50,7 @@ class WhatsAppWriter(object):
         user = []
         msg = []
         for s in reversed(soupp):
-            if (s == self.group_name):
+            if (s == name):
                 break
 
             if (next):
@@ -67,11 +68,10 @@ class WhatsAppWriter(object):
                 msg.append(user)
 
                 user = []
-
         non_empty_messages = [x for x in msg if len(x)!=0]
         for x in non_empty_messages:
             x.reverse()
-        return self.format_messages(non_empty_messages, self.group_name)
+        return self.format_messages(non_empty_messages, name)
 
 
     def format_messages(self, messages, group_name):
@@ -87,8 +87,8 @@ class WhatsAppWriter(object):
 
 
 if __name__ == "__main__":
-    bot = WhatsAppWriter("hack")
+    bot = WhatsAppWriter(r"../chromedriver")
     bot.open_WhatsApp()
     # bot.write("hi")
-    l = bot.read("15:55")
+    l = bot.read("15:55", "hack")
     print(l)
