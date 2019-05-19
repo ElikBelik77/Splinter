@@ -23,7 +23,7 @@ class FilterModel:
         :return: Filtered list of messages
         """
         important_list = []
-        with open(self.keys) as file:
+        with open(self.keys, encoding='utf-8') as file:
             keys = file.readlines()
             for i, msg in enumerate(messages):
                 if self.check_by_keys(msg.content, keys) and self.check_by_rules(msg):
@@ -94,6 +94,7 @@ class FilterModel:
         :param message:
         :return:
         """
+        message = message.content
         if len(message) < 2 or len(message.split()) < 2:
             return False
         if len(re.findall("\d\.\d", message)) > 0 or \
@@ -120,8 +121,3 @@ class FilterModel:
             print(val, "   :", l)
 
 
-
-
-t = FilterModel()
-
-t.testing()

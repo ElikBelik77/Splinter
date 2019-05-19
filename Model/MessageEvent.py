@@ -24,7 +24,7 @@ class MessageEvent(object):
 
     def get_message(self):
         while True:
-            message = self.reader.read("00:00", "🔥PYROX🔥")
+            message = self.reader.read("00:00", "ראשי קבוצה HackAU")
             length = len(message)
             if length > 0:
                 self.notify(message)
