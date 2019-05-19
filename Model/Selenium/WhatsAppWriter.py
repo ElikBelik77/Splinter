@@ -3,6 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup as bs
+import time
 import re
 from Model import Message
 
@@ -22,7 +23,7 @@ class WhatsAppWriter(object):
         prev = ""
         for s in soupp:
             if (prev != ""):
-                if (pattern2.match(s)):
+                if (pattern2.match(s) or s == 'אתמול'):
                     if (pattern1.search(prev)):
                         prev = prev[1:-1]
                     if (prev not in clients):
@@ -35,7 +36,6 @@ class WhatsAppWriter(object):
     def open_WhatsApp(self):
         self.driver = webdriver.Chrome(executable_path=self.driver_path)
         self.driver.get("https://web.whatsapp.com/")
-        self.driver.add_cookie({'name': 'wa_ul', 'value': '351a3843-72fa-1a71-5f08-dc35c6f010ca'})
         input("click after connected")
 
 
@@ -50,11 +50,14 @@ class WhatsAppWriter(object):
         # Load a page
         self.driver.get("https://web.whatsapp.com/")
         # Make the tests...
+        # self.read_contact()
 
-        # close the tab
-        # (Keys.CONTROL + 'w') on other OSs.
         self.driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w')
-        return self.read_contact()
+
+        time.sleep(6)
+        self.read_contact()
+        return self.clients
+
 
     def write(self, msg, name):
         user = self.driver.find_element_by_xpath('//span[@title = "%s"]' % name)
@@ -128,7 +131,8 @@ if __name__ == "__main__":
     bot = WhatsAppWriter(r"../chromedriver")
     bot.open_WhatsApp()
     # print(bot.clients)
-    bot.get_contact()
+    l = bot.get_contact()
+    print(l)
     # bot.write("hi")
     #l = bot.read("15:55", "hack")
     #print(l)

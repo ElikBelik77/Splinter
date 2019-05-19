@@ -1,4 +1,4 @@
-from Controller import BotController
+
 from Model import Message
 from Model.Selenium import WhatsAppWriter
 
@@ -8,7 +8,7 @@ class UserDialogLogic:
         self.user_dialogs = {}
         pass
 
-    def handle(self, message: Message, controller: BotController):
+    def handle(self, message: Message):
         # TODO: if there is time, implement a better dialog system ?
         if message.content.find("groups:"):
             message.user.preferred_groups = message.content[7:].split(',')
