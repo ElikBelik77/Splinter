@@ -35,7 +35,6 @@ class WhatsAppWriter(object):
     def open_WhatsApp(self):
         self.driver = webdriver.Chrome(executable_path=self.driver_path)
         self.driver.get("https://web.whatsapp.com/")
-        self.driver.add_cookie({'name': 'wa_ul', 'value': '351a3843-72fa-1a71-5f08-dc35c6f010ca'})
         input("click after connected")
 
 
@@ -51,9 +50,9 @@ class WhatsAppWriter(object):
         self.driver.get("https://web.whatsapp.com/")
         # Make the tests...
 
-        # close the tab
-        # (Keys.CONTROL + 'w') on other OSs.
         self.driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w')
+
+
         return self.read_contact()
 
     def write(self, msg, name):
@@ -130,7 +129,8 @@ if __name__ == "__main__":
     bot = WhatsAppWriter(r"../chromedriver")
     bot.open_WhatsApp()
     # print(bot.clients)
-    bot.get_contact()
+    l = bot.get_contact()
+    print(l)
     # bot.write("hi")
     #l = bot.read("15:55", "hack")
     #print(l)
