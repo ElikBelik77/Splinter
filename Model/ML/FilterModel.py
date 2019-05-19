@@ -64,16 +64,16 @@ class FilterModel:
                     break
         ratio = counter / len(message)
         if len(message) < 5:
-            if ratio < 0.5:
+            if ratio < 0.45:
                 spam = True
         elif len(message) < 20:
-            if ratio < 0.4:
+            if ratio < 0.35:
                 spam = True
         elif len(message) < 30:
-            if ratio < 0.3:
+            if ratio < 0.25:
                 spam = True
         elif len(message) < 40:
-            if ratio < 0.2:
+            if ratio < 0.15:
                 spam = True
         else:
             if ratio < 0.1:
