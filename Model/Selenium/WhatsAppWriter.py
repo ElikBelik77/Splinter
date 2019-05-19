@@ -11,4 +11,4 @@ class WhatsAppWriter(object):
 
 if __name__ == "__main__":
     driver = webdriver.Chrome()
-    
+
