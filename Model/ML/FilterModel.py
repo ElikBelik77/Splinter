@@ -3,11 +3,10 @@
 import codecs
 import re
 from itertools import groupby
-from difflib import get_close_matches
 
 
 def diff(f, s):
-    return editDistance(f,s,len(f),len(s))
+    return editDistance(f,s,len(f),len(s)) < 3
 
 # A Naive recursive Python program to fin minimum number
 # operations to convert str1 to str2
@@ -36,6 +35,7 @@ def editDistance(str1, str2, m, n):
                    editDistance(str1, str2, m - 1, n),  # Remove
                    editDistance(str1, str2, m - 1, n - 1)  # Replace
                    )
+
 
 class FilterModel:
     def __init__(self, keys_file_name="good_words_list"):
@@ -137,18 +137,18 @@ class FilterModel:
             return True
         return False
 
-    def testing(self):
-        f = codecs.open("test_messages", encoding='utf-8', mode='r')
-        lines = f.readlines()
-        h = codecs.open("good_words_list", encoding='utf-8', mode='r')
-        keys = h.readlines()
-        for l in lines:
-            val = self.check_by_keys(l, keys) or self.check_by_rules(l)
-            print(val, "   :", l)
+    # def testing(self):
+    #     f = codecs.open("test_messages", encoding='utf-8', mode='r')
+    #     lines = f.readlines()
+    #     h = codecs.open("good_words_list", encoding='utf-8', mode='r')
+    #     keys = h.readlines()
+    #     for l in lines:
+    #         val = self.check_by_keys(l, keys) or self.check_by_rules(l)
+    #         print(val, "   :", l)
 
 
 
 
-t = FilterModel()
-
-t.testing()
+# t = FilterModel()
+#
+# t.testing()
