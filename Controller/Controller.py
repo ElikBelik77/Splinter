@@ -35,7 +35,7 @@ class Controller:
         message_to_filter = [message for message in parsed_messaged if message.sender is not message.chat_name]
         messages_to_bot = [message for message in parsed_messaged if message.sender == message.chat_name]
         for message in messages_to_bot:
-            self.user_interaction_parser.handle(message)
+            self.user_interaction_parser.handle(message, self.whats_app_writer)
 
         filtered_message = self.message_filterer.filter(message_to_filter)
         self.whats_app_model.whats_app_storage.push_messages(filtered_message)
@@ -50,4 +50,3 @@ class Controller:
         tick_processing_time = start_time - time.time()
         if not self.stop:
             self.digest_timer = threading.Timer(self.digest_interval, self.interval_function)
-
