@@ -1,5 +1,6 @@
-from .. import Message
-from .. import User
+# from .. import Message
+# from .. import User
+import codecs
 import re
 from itertools import groupby
 from difflib import get_close_matches
@@ -25,7 +26,7 @@ class FilterModel:
         with open(self.keys) as file:
             keys = file.readlines()
             for i, msg in enumerate(messages):
-                if self.check_by_keys(msg.content, keys) or self.check_by_rules(msg):
+                if self.check_by_keys(msg.content, keys) and self.check_by_rules(msg):
                     important_list.append(messages[i])
         return important_list
 
@@ -39,15 +40,15 @@ class FilterModel:
         """
         important_list = []
         for i, msg in enumerate(messages):
-            if self.check_by_keys(msg.content, user.preferences) or self.check_by_rules(msg):
+            if self.check_by_keys(msg.content, user.preferences) and self.check_by_rules(msg):
                 important_list.append(messages[i])
         return important_list
 
     def check_by_keys(self, message, keys):
         """
-        Check a single massage by keys
+        Check a single message by keys
         :param message: a string
-        :param keys: a list of string representing key words
+        :param keys: a list of strings representing key words
         :return: false if spam and true otherwise
         """
         imp = ",.?:!"
@@ -64,12 +65,13 @@ class FilterModel:
                 if diff(word, key):
                     if diff(word, "עזרה") or diff(word, "בבקשה") or diff(word, "?") or diff(word, "אפשר"):
                         counter += 2
-                        break
-                    counter += counter
-                    break
+                        continue
+                    counter += 1
         ratio = counter / len(message)
         if len(message) < 5:
-            if ratio < 0.45:
+            if len(message) < 2:
+                spam = True
+            elif ratio < 0.45:
                 spam = True
         elif len(message) < 20:
             if ratio < 0.35:
@@ -83,6 +85,7 @@ class FilterModel:
         else:
             if ratio < 0.1:
                 spam = True
+        print(ratio)
         return not spam
 
     def check_by_rules(self, message):
@@ -107,4 +110,18 @@ class FilterModel:
             return True
         return False
 
+    def testing(self):
+        f = codecs.open("test_messages", encoding='utf-8', mode='r')
+        lines = f.readlines()
+        h = codecs.open("good_words_list", encoding='utf-8', mode='r')
+        keys = h.readlines()
+        for l in lines:
+            val = self.check_by_keys(l, keys) or self.check_by_rules(l)
+            print(val, "   :", l)
 
+
+
+
+t = FilterModel()
+
+t.testing()
