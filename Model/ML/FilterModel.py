@@ -3,10 +3,11 @@
 import codecs
 import re
 from itertools import groupby
+from difflib import get_close_matches
 
 
 def diff(f, s):
-    return sum(c1 != c2 for c1, c2 in zip(f.ljust(max(len(f), len(s))), s.ljust(max(len(f), len(s))))) < 2
+    return len(get_close_matches(f, [s])) > 0
 
 
 class FilterModel:
@@ -94,7 +95,7 @@ class FilterModel:
         :param message:
         :return:
         """
-        if len(message) < 2 or len(message.split()) < 2:
+        if len(message) < 3 or len(message.split()) < 3:
             return False
         if len(re.findall("\d\.\d", message)) > 0 or len(re.findall("\d/\d", message)):
             return True
