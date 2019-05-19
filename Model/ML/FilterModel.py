@@ -51,11 +51,13 @@ class FilterModel:
         :param message:
         :return:
         """
-        if len(message) < 2:
+        if len(message) < 2 or len(message.split()) < 2:
             return False
-        if ':' in message:
+        for item in re.findall(".:.", message):
+            if item[0] in "&()–[{}]:;',?/*^><" or item[-1] in "&()–[{}]:;',?/*^><":
+                return False
+        if len(re.findall(",", message)) > 3:
             return True
-        words = message.split(" ")
-        return False
+        return True
 
 
