@@ -8,9 +8,7 @@ class UserDialogLogic:
 
     def handle(self, message: Message, whats_app_sender):
         # TODO: if there is time, implement a better dialog system ?
-        if message.sender not in self.user_dialogs:
-            whats_app_sender.send("Noted ! Hope you have a good time with bot")
-            self.user_dialogs[message.sender] = 1
-        else:
-            whats_app_sender.send("Noted ! Hope you have a good time with bot")
-        return message.content.split(',')
+        if message.content.find("groups:"):
+            message.user.preferred_groups = message.content[7:].split(',')
+        elif message.content.find("words:"):
+            message.user.preferences = message.content[6:].split(',')
