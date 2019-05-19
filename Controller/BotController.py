@@ -16,7 +16,7 @@ class Controller:
         self.last_digest = time.time()
         self.digest_timer = threading.Timer(self.digest_interval, self.interval_function)
         self.user_interaction_parser = UserDialogLogic.UserDialogLogic()
-        self.whats_app_writer = WhatsAppWriter.WhatsAppWriter(r"../Model/chromedriver","hack")
+        self.whats_app_writer = WhatsAppWriter.WhatsAppWriter(r"../Model/chromedriver")
         self.whats_app_reader = self.whats_app_writer
         self.message_event_pusher = MessageEvent.MessageEvent(self.whats_app_reader)
         self.message_event_pusher.add_listener(self.on_message_received)
