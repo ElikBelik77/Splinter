@@ -60,23 +60,27 @@ class FilterModel:
         list_message = message.split()
         spam = False
         counter = 0
+        ratio = 0
         for word in list_message:
             for key in keys:
                 if diff(word, key):
-                    if (word == "עזרה") or (word == "בבקשה") or diff(word, "?") or diff(word, "אפשר")\
-                            or (word == "דחיה") or (word == "דחhיה") or (word == "הארכה"):
+                    if (word == "הכי") or (word == "לנו") or (word == "למה"):
+                        break
+                    if (word == "עזרה") or (word == "בבקשה") or diff(word, "?")\
+                            or (word == "דחיה") or (word == "הארכה"):
                         counter += 2
                         break
                     counter += 1
                     break
-        ratio = counter / len(list_message)
+        if len((list_message)) != 0 :
+            ratio = counter / len(list_message)
         if len(list_message) < 5:
             if len(list_message) <= 3:
                 spam = True
             elif ratio < 0.45:
                 spam = True
         elif len(list_message) < 20:
-            if ratio < 0.35:
+            if ratio < 0.33:
                 spam = True
         elif len(list_message) < 30:
             if ratio < 0.25:
@@ -98,7 +102,6 @@ class FilterModel:
         if len(message) < 3 or len(message.split()) < 3:
             return False
         if len(re.findall("\d\.\d", message)) > 0: #or len(re.findall("\d/\d", message)) > 0
-            print("print hi1")
             return True
         four_or_more = (char for char, group in groupby(message)
                          if sum(1 for _ in group) >= 4)
@@ -112,15 +115,16 @@ class FilterModel:
         return False
 
     def testing(self):
-        f = codecs.open("test_messages", encoding='utf-8', mode='r')
+        f = codecs.open("data1", encoding='utf-8', mode='r')
         lines = f.readlines()
         h = codecs.open("good_words_list", encoding='utf-8', mode='r')
         keys = h.readlines()
         for l in lines:
             val = self.check_by_keys(l, keys) or self.check_by_rules(l)
-            print(val, "   :", l)
-
-
+            if val:
+                print("1, ", l)
+            else:
+                print("0, ", l)
 
 
 t = FilterModel()
